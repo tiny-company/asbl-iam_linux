@@ -1,0 +1,8 @@
+---
+- name: Converge
+  hosts: all
+  become: yes
+  become_user: root
+  vars:
+  roles:
+    - role: "ansible-template-role"

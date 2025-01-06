@@ -1,0 +1,11 @@
+---
+# file : _delete_user.yml
+# description : delete unwanted users
+
+- name: Remove unwanted users
+  ansible.builtin.user:
+    name: "{{ item }}"
+    state: absent
+    remove: yes
+  with_items: "{{ users_to_del }}"
+  when: users_to_del is iterable

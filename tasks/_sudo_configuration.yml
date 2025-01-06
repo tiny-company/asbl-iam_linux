@@ -1,0 +1,24 @@
+---
+# Description : Get the secret from vault to be used in docker-compose for volume-backup
+# file : _get_secret_version.yml
+
+# ## update sources (apt update) if the last one is more than 3600 seconds ago
+# - name: update apt sources
+#   ansible.builtin.apt:
+#     update_cache: yes
+#     cache_valid_time: 3600
+
+# ## install desired package with apt
+# - name: Install the sudo package
+#   ansible.builtin.apt:
+#     pkg: "sudo"
+#     state: present
+
+- name: Configure sudo for given groups
+  community.general.sudoers:
+    name: webdrone_groups
+    group: "{{ item.name }}"
+    commands: ALL
+    nopassword: true
+  with_items: "{{ groups_to_add }}"
+  when: groups_to_add is iterable and item.root_sudo

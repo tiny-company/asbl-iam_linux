@@ -1,0 +1,73 @@
+---
+###################################################
+## iam_linux role vars
+###################################################
+
+## root username (default is root)
+root_user: root
+
+## ## user to run this playbook
+iam_linux_user: "{{ root_user }}"
+
+# defaults file for user_and_group
+
+## ==================
+## prerequisites
+## Assuming sudo is not yet configured, connecting as root is a requirement
+ansible_user: "{{ root_user }}"
+
+## ==================
+## secret from scw credential manager
+# access_key:
+# secret_key:
+# project_id:
+# region:
+
+user_group_secret_list:
+  - { name : "root_password", region : "fr-par" }
+
+## ==================
+## groups
+group_docker_name: docker
+groups_to_add:
+  - {name : "admin", root_sudo: true }
+  - {name : "dev", root_sudo: true }
+  - {name : "dqm", root_sudo: false }
+  - {name : "{{ group_docker_name }}", root_sudo: false }
+
+
+## ==================
+## users
+users_to_add:
+  - name: "docker"
+    group: "{{ group_docker_name }}"
+    groups: []
+    # shell: '/bin/bash'
+    comment: 'docker user'
+    # expires: ""
+    ssh_public_keys: []
+
+
+users_to_del: []
+
+## ==================
+## ACL
+
+acl_list:
+  - name: "log"
+    path: "/var/log/webdrone"
+    entity: "dqm"
+    etype: "group"
+    permission: "r"
+
+  - name: "docker_daemon"
+    path: "/var/run/docker.sock"
+    entity: "dev"
+    etype: "group"
+    permission: "rw"
+
+  - name: "docker_daemon"
+    path: "/var/run/docker.sock"
+    entity: "admin"
+    etype: "group"
+    permission: "rw"

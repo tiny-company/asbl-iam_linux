@@ -1,0 +1,15 @@
+---
+# Description : configure the groups on the host
+# file : _configure_groups.yml
+# Source : https://docs.ansible.com/ansible/latest/collections/ansible/builtin/group_module.html
+
+# add the groups
+- name: Ensure groups exists and add them if not
+  ansible.builtin.group:
+    name: "{{ item.name }}"
+    state: present
+  with_items: "{{ groups_to_add }}"
+  when: groups_to_add is iterable
+
+- name: Reset ssh connection to allow user changes to affect 'current login user'
+  ansible.builtin.meta: reset_connection

@@ -1,0 +1,31 @@
+---
+# file : _set_acl.yml
+# description : set acl for specific shared files
+
+- name: get /boot/config filename
+  ansible.builtin.command: "ls /boot/config*"
+  register: boot_config_file
+
+- name: check if acl are supported for ext4
+  ansible.builtin.lineinfile: 
+    dest: boot_config_file
+    line: "CONFIG_EXT4_FS_POSIX_ACL=y"
+  check_mode: yes
+  register: acl_ext4_support
+
+- name: check if acl are supported for reiserfs
+  ansible.builtin.lineinfile: 
+    dest: boot_config_file
+    line: "CONFIG_REISERFS_FS_POSIX_ACL=y"
+  check_mode: yes
+  register: acl_reiserfs_support
+
+- name: Set /var/log ACL
+  ansible.posix.acl:
+    path: "{{ item.path }}"
+    entity: "{{ item.entity }}"
+    etype: "{{ item.etype }}"
+    permissions: "{{ item.permission }}"
+    state: present
+  with_items: "{{ acl_list }}"
+  when: acl_ext4_support and acl_reiserfs_support

@@ -1,0 +1,27 @@
+---
+- name: Verify
+  hosts: all
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: SmokeTests
+      debug:
+        msg:
+          - "ansible_version => {{ansible_version}}"
+          - "ansible_distribution => {{ ansible_distribution }}"
+          - "ansible_distribution_major_version => {{ ansible_distribution_major_version }}"
+          - "ansible_os_family  => {{ ansible_os_family}}"
+          - "ansible_system  => {{ ansible_system }}"
+
+    ## write test as ansible tasks below 
+    ## example below
+
+    # - name: verify if group exists (default)
+    #   ansible.builtin.group:
+    #     name: "admin"
+    #   check_mode: true
+    #   register: molecule_group
+    #   failed_when: (molecule_group is changed) or (molecule_group is failed)
+
+    

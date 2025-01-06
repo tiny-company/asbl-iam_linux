@@ -1,0 +1,27 @@
+---
+# Description : configure the user (shell, ssh public keys) and the groups (can delete some user if needed)
+# file : main.yml
+
+# First get the secrets
+# - import_tasks: _get_secret_version.yml
+#   tags: [_get_secret_version]
+
+# configure the groups
+- import_tasks: _configure_groups.yml
+  tags: [_configure_groups]
+
+# Then add new users and add them to the groups previously created
+- import_tasks: _add_new_user.yml
+  tags: [_add_new_user]
+
+# Then add ssh public keys to the users
+- import_tasks: _configure_pub_keys.yml
+  tags: [_configure_pub_keys]
+
+## Install and Configure sudo
+- import_tasks: _sudo_configuration.yml
+  tags: [_sudo_configuration]
+
+# After new users are created we can delete default one without danger (i.e : delete the only user on the server)
+- import_tasks: _delete_user.yml
+  tags: [_delete_user]

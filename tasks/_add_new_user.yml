@@ -1,0 +1,61 @@
+---
+# file : _add_new_user.yml
+# description : create new users, configure them and add public key to ssh authentication
+
+## Configure root user
+- name: Add root user
+  ansible.builtin.user:
+    name: root
+    shell: /bin/bash
+    password: "{{ root_password }}"
+    update_password: always
+    groups: root
+    state: present
+  when: root_password is defined
+  no_log: True
+
+## Set all other users
+- name: Add users and configure them
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    group: "{{ item.group | default(omit) }}"
+    groups: "{{ item.groups | default(omit) }}"
+    state: present
+    shell: "{{ item.shell | default('/bin/bash') }}"
+    comment: "{{ item.comment | default(omit) }}"
+    expires: "{{ item.expires | default(omit) }}"
+  register: user_added
+  with_items: "{{ users_to_add }}"
+  when: users_to_add is iterable
+
+## Set tmp folder for ansible to avoid rights issue
+- name: Add ansible tmp folder for users
+  ansible.builtin.file:
+    path: "/home/{{ item.name }}/.ansible/tmp"
+    state: directory
+    owner: "{{ item.name }}"
+    group: "{{ item.group }}"
+    mode: "0755"
+  with_items: "{{ users_to_add }}"
+  when: users_to_add is iterable
+
+- name: Add .ssh folder for users
+  ansible.builtin.file:
+    path: '/home/{{ item.name }}/.ssh'
+    state: directory
+    owner: "{{ item.name }}"
+    group: "{{ item.group }}"
+    mode: "0755"
+  with_items: "{{ users_to_add }}"
+  when: users_to_add is iterable
+
+## set bashrc dotfile for all user
+- name: Copy .bashrc for local users
+  ansible.builtin.copy:
+    src: ".bashrc"
+    dest: "/home/{{ item.name }}/.bashrc"
+    owner: "{{ item.name }}"
+    group: "{{ item.group }}"
+    mode: "0750"
+  with_items: "{{ users_to_add }}"
+  when: users_to_add is iterable

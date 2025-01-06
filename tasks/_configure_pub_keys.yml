@@ -1,0 +1,11 @@
+---
+# Description : configure the public ssh keys
+# file : _configure_pub_keys.yml
+
+- name: Set up multiple authorized keys
+  ansible.posix.authorized_key:
+    user: "{{ item.name }}"
+    state: present
+    key: "{{ item.ssh_public_keys | join('\n') }}"
+  with_items: "{{ users_to_add }}"
+  when: users_to_add is iterable

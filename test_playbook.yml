@@ -1,0 +1,9 @@
+---
+
+- name: Iam_linux playbook
+  hosts: all
+  roles:
+    - role: iam_linux
+      become: true
+      become_user: "{{ iam_linux_user }}"
+      tags: [iam_linux]

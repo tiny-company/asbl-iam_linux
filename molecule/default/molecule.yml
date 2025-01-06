@@ -1,0 +1,34 @@
+---
+
+dependency:
+  name: galaxy
+  options:
+    role-file: requirements.yml
+    requirements-file: requirements.yml
+
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+
+driver:
+  name: docker
+
+
+platforms:
+  - name: debian__webdrone_instance
+    image: webdronesas/molecule_runner
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    capabilities:
+      - SYS_ADMIN
+      - NET_ADMIN
+    pre_build_image: true
+
+provisioner:
+  name: ansible
+
+verifier:
+  name: ansible
+  
