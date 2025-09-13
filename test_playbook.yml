@@ -3,7 +3,10 @@
 - name: Iam_linux playbook
   hosts: all
   roles:
-    - role: iam_linux
+    - role: ../asbl-iam_linux
       become: true
-      become_user: "{{ iam_linux_user }}"
+      become_user: "{{ root_username }}"
       tags: [iam_linux]
+  # tasks:
+  #   - name: iam role entrypoint
+  #     import_tasks: ./tasks/main.yml

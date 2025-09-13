@@ -2,9 +2,10 @@
 # Description : configure the user (shell, ssh public keys) and the groups (can delete some user if needed)
 # file : main.yml
 
-# First get the secrets
-# - import_tasks: _get_secret_version.yml
-#   tags: [_get_secret_version]
+- name: Set ansible_user to root if init var is true
+  set_fact:
+    ansible_user: root
+  when: init_var | bool
 
 # configure the groups
 - import_tasks: _configure_groups.yml

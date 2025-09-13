@@ -1,10 +1,10 @@
 ---
 
 roles:
-  - name: iam_linux
-    scm: git
-    src: git@github.com:tiny-company/asbl-iam_linux.git
-    version: main
+  # - name: iam_linux
+  #   scm: git
+  #   src: git@github.com:tiny-company/asbl-iam_linux.git
+  #   version: main
 
   - name: apt_packages_install
     scm: git

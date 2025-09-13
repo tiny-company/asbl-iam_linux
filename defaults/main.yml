@@ -4,27 +4,15 @@
 ###################################################
 
 ## root username (default is root)
-root_user: root
-
-## ## user to run this playbook
-iam_linux_user: "{{ root_user }}"
-
+root_username: root
 # defaults file for user_and_group
 
 ## ==================
 ## prerequisites
-## Assuming sudo is not yet configured, connecting as root is a requirement
-ansible_user: "{{ root_user }}"
-
-## ==================
-## secret from scw credential manager
-# access_key:
-# secret_key:
-# project_id:
-# region:
-
-user_group_secret_list:
-  - { name : "root_password", region : "fr-par" }
+## set init to true for new host (when only root user exist) in order to connect using root user
+init_var: true
+# user to connect to host if init var (above) is set to false (default set to root_username)
+iam_linux_user: "{{ root_username }}"
 
 ## ==================
 ## groups
@@ -35,9 +23,16 @@ groups_to_add:
   - {name : "dqm", root_sudo: false }
   - {name : "{{ group_docker_name }}", root_sudo: false }
 
-
 ## ==================
-## users
+## root user vars
+root_user:
+  name: "{{ root_username }}"
+  groups: ["root"]
+  ssh_public_keys: []
+  generate_ssh_key: true
+  password: 
+
+## other user vars
 users_to_add:
   - name: "docker"
     group: "{{ group_docker_name }}"
@@ -46,8 +41,9 @@ users_to_add:
     comment: 'docker user'
     # expires: ""
     ssh_public_keys: []
+    generate_ssh_key: true
 
-
+## user name list to delete from host 
 users_to_del: []
 
 ## ==================

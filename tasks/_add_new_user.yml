@@ -5,13 +5,14 @@
 ## Configure root user
 - name: Add root user
   ansible.builtin.user:
-    name: root
+    name: "{{ root_user.name }}"
     shell: /bin/bash
-    password: "{{ root_password }}"
+    password: "{{ root_user.password | default(omit) }}"
     update_password: always
-    groups: root
+    groups: "{{ root_user.groups }}"
     state: present
-  when: root_password is defined
+    generate_ssh_key: "{{ root_user.generate_ssh_key | bool}}"
+  when: root_user is defined
   no_log: True
 
 ## Set all other users
@@ -24,6 +25,7 @@
     shell: "{{ item.shell | default('/bin/bash') }}"
     comment: "{{ item.comment | default(omit) }}"
     expires: "{{ item.expires | default(omit) }}"
+    generate_ssh_key: "{{ item.generate_ssh_key | bool }}"
   register: user_added
   with_items: "{{ users_to_add }}"
   when: users_to_add is iterable
