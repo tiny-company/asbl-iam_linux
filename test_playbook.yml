@@ -12,6 +12,3 @@
       become: true
       become_user: "{{ root_username }}"
       tags: [iam_linux]
-  # tasks:
-  #   - name: iam role entrypoint
-  #     import_tasks: ./tasks/main.yml
