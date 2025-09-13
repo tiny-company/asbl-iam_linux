@@ -12,6 +12,8 @@
     groups: "{{ root_user.groups }}"
     state: present
     generate_ssh_key: "{{ root_user.generate_ssh_key | bool}}"
+    ssh_key_type: "{{ item.ssh_key_type | default('rsa') }}"
+    ssh_key_bits: "{{ item.ssh_key_bits | default(4096) }}"
   when: root_user is defined
   no_log: True
 
@@ -26,6 +28,8 @@
     comment: "{{ item.comment | default(omit) }}"
     expires: "{{ item.expires | default(omit) }}"
     generate_ssh_key: "{{ item.generate_ssh_key | bool }}"
+    ssh_key_type: "{{ item.ssh_key_type | default('rsa') }}"
+    ssh_key_bits: "{{ item.ssh_key_bits | default(4096) }}"
   register: user_added
   with_items: "{{ users_to_add }}"
   when: users_to_add is iterable

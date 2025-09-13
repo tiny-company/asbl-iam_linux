@@ -29,7 +29,9 @@ root_user:
   name: "{{ root_username }}"
   groups: ["root"]
   ssh_public_keys: []
-  generate_ssh_key: true
+  generate_ssh_key: false
+  ssh_key_type: "rsa"
+  ssh_key_bits: 4096
   password: 
 
 ## other user vars
@@ -42,6 +44,8 @@ users_to_add:
     # expires: ""
     ssh_public_keys: []
     generate_ssh_key: true
+    ssh_key_type: "rsa"
+    ssh_key_bits: 2048
 
 ## user name list to delete from host 
 users_to_del: []

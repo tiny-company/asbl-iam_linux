@@ -6,10 +6,10 @@ roles:
   #   src: git@github.com:tiny-company/asbl-iam_linux.git
   #   version: main
 
-  - name: apt_packages_install
-    scm: git
-    src: git@github.com:tiny-company/asbl-apt_packages_install.git
-    version: main
+  # - name: apt_packages_install
+  #   scm: git
+  #   src: git@github.com:tiny-company/asbl-apt_packages_install.git
+  #   version: main
 
 collections:
   - name: scaleway.scaleway
