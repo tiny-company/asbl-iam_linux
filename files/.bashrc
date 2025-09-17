@@ -6,13 +6,13 @@
 [ -z "$PS1" ] && return
 
 ########################
-### export vars 
+### export vars
 ########################
 
 export VISUAL=nano
 
 ########################
-### History 
+### History
 ########################
 
 ## don't put duplicate lines in the history. See bash(1) for more options
@@ -58,7 +58,7 @@ fi
 if [ "$color_prompt" = yes ]; then
     ### classic prompt
     ## PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-    ### custom prompt 
+    ### custom prompt
     PS1="\[\e]0;\u@\h: \w\a\]\[\033[01;32m\]\u\[\033[01;36m\]@\[\033[01;32m\]\H\[\033[01;34m\] <\A> \[\033[01;35m\] \j \[\033[01;36m\] \w \[\033[01;33m\]\n\$\[\033[01;00m\] "
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
@@ -91,7 +91,7 @@ export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quo
 
 
 ########################
-### Window 
+### Window
 ########################
 
 ## check the window size after each command and, if necessary,
@@ -100,7 +100,7 @@ shopt -s checkwinsize
 
 
 ########################
-### Auto-completion 
+### Auto-completion
 ########################
 
 ## enable programmable completion features (you don't need to enable
@@ -118,7 +118,7 @@ fi
 if [[ $iatest > 0 ]]; then bind "set completion-ignore-case on"; fi
 
 ########################
-### Alias 
+### Alias
 ########################
 
 ## Alias definitions.
@@ -196,28 +196,28 @@ distribution ()
 	local dtype
 	## Assume unknown
 	dtype="unknown"
-	
+
 	## First test against Fedora / RHEL / CentOS / generic Redhat derivative
 	if [ -r /etc/rc.d/init.d/functions ]; then
 		source /etc/rc.d/init.d/functions
 		[ zz`type -t passed 2>/dev/null` == "zzfunction" ] && dtype="redhat"
-	
+
 	## Then test against SUSE (must be after Redhat,
 	## I've seen rc.status on Ubuntu I think? TODO: Recheck that)
 	elif [ -r /etc/rc.status ]; then
 		source /etc/rc.status
 		[ zz`type -t rc_reset 2>/dev/null` == "zzfunction" ] && dtype="suse"
-	
+
 	## Then test against Debian, Ubuntu and friends
 	elif [ -r /lib/lsb/init-functions ]; then
 		source /lib/lsb/init-functions
 		[ zz`type -t log_begin_msg 2>/dev/null` == "zzfunction" ] && dtype="debian"
-	
+
 	## Then test against Gentoo
 	elif [ -r /etc/init.d/functions.sh ]; then
 		source /etc/init.d/functions.sh
 		[ zz`type -t ebegin 2>/dev/null` == "zzfunction" ] && dtype="gentoo"
-	
+
 	## For Mandriva we currently just test if /etc/mandriva-release exists
 	## and isn't empty (TODO: Find a better way :)
 	elif [ -s /etc/mandriva-release ]; then
@@ -286,7 +286,7 @@ alias cpu="grep 'cpu ' /proc/stat | awk '{usage=(\$2+\$4)*100/(\$2+\$4+\$5)} END
 function __setprompt
 {
 	## Must come first
-	local LAST_COMMAND=$? 
+	local LAST_COMMAND=$?
 
 	## Define colors
 	local LIGHTGRAY="\033[0;37m"
@@ -352,7 +352,7 @@ function __setprompt
 	## Date
 	PS1+="\[${DARKGRAY}\](\[${CYAN}\]\$(date +%d/%m/%Y)"
 	## Time
-	PS1+="${BLUE} $(date +'%-I':%M:%S%P)\[${DARKGRAY}\])-" 
+	PS1+="${BLUE} $(date +'%-I':%M:%S%P)\[${DARKGRAY}\])-"
 
 	## CPU
 	PS1+="(\[${MAGENTA}\]CPU $(cpu)%"
@@ -388,10 +388,10 @@ function __setprompt
 
 	if [[ $EUID -ne 0 ]]; then
 		## Normal user
-		PS1+="\[${GREEN}\]>\[${NOCOLOR}\] " 
+		PS1+="\[${GREEN}\]>\[${NOCOLOR}\] "
 	else
 		## Root user
-		PS1+="\[${RED}\]>\[${NOCOLOR}\] " 
+		PS1+="\[${RED}\]>\[${NOCOLOR}\] "
 	fi
 
 	## PS2 is used to continue a command using the \ character

@@ -9,7 +9,7 @@ galaxy_info:
 dependencies:
   - role: apt_packages_install
     become: true
-    become_user: "{{ root_user }}"
+    become_user: root
     vars:
       apt_source_package_list:
         ## sudo packages
