@@ -3,6 +3,7 @@
 # .vscode/
 
 ### Ansible ###
+.ansible
 *.retry
 inventory.yml
 
