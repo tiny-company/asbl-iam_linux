@@ -3,19 +3,16 @@ galaxy_info:
   author: ottomatic
   description: ansible role that configure IAM (Identity Access Management)
   company: tiny-company
-  license: license GPL-3.0-only
+  license: GPL-3.0-only
   min_ansible_version: 2.14.1
 
 dependencies:
   - role: apt_packages_install
     become: true
-    become_user: root
     vars:
       apt_source_package_list:
-        ## sudo packages
+        ## sudo package (required by the sudoers group configuration)
         - sudo
         ## acl packages
         - nfs4-acl-tools
         - acl
-
-

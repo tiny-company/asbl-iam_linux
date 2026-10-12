@@ -11,11 +11,11 @@
     update_password: always
     groups: "{{ root_user.groups }}"
     state: present
-    generate_ssh_key: "{{ root_user.generate_ssh_key | bool}}"
-    ssh_key_type: "{{ item.ssh_key_type | default('rsa') }}"
-    ssh_key_bits: "{{ item.ssh_key_bits | default(4096) }}"
-  when: root_user is defined
-  no_log: True
+    generate_ssh_key: "{{ root_user.generate_ssh_key | bool }}"
+    ssh_key_type: "{{ root_user.ssh_key_type | default('rsa') }}"
+    ssh_key_bits: "{{ root_user.ssh_key_bits | default(4096) }}"
+  when: root_user is defined and set_root_user_flag
+  no_log: true
 
 ## Set all other users
 - name: Add users and configure them
@@ -51,17 +51,6 @@
     state: directory
     owner: "{{ item.name }}"
     group: "{{ item.group }}"
-    mode: "0755"
-  with_items: "{{ users_to_add }}"
-  when: users_to_add is iterable
-
-## set bashrc dotfile for all user
-- name: Copy .bashrc for local users
-  ansible.builtin.copy:
-    src: ".bashrc"
-    dest: "/home/{{ item.name }}/.bashrc"
-    owner: "{{ item.name }}"
-    group: "{{ item.group }}"
-    mode: "0750"
+    mode: "0700"
   with_items: "{{ users_to_add }}"
   when: users_to_add is iterable

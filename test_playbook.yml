@@ -4,11 +4,11 @@
   hosts: all
   pre_tasks:
     - name: Set ansible_user to root if init var is true
-      set_fact:
-        ansible_user: "{{ root_username }}"
+      ansible.builtin.set_fact:
+        ansible_user: "{{ iam_linux_user }}"
       when: init_var | bool
   roles:
     - role: ../asbl-iam_linux
       become: true
-      become_user: "{{ root_username }}"
+      become_user: "{{ iam_linux_user }}"
       tags: [iam_linux]

@@ -3,21 +3,26 @@
 # file : main.yml
 
 # configure the groups
-- import_tasks: _configure_groups.yml
+- name: Configure groups
+  ansible.builtin.import_tasks: _configure_groups.yml
   tags: [_configure_groups]
 
 # Then add new users and add them to the groups previously created
-- import_tasks: _add_new_user.yml
+- name: Add new users
+  ansible.builtin.import_tasks: _add_new_user.yml
   tags: [_add_new_user]
 
 # Then add ssh public keys to the users
-- import_tasks: _configure_pub_keys.yml
+- name: Configure public ssh keys
+  ansible.builtin.import_tasks: _configure_pub_keys.yml
   tags: [_configure_pub_keys]
 
-## Install and Configure sudo
-- import_tasks: _sudo_configuration.yml
-  tags: [_sudo_configuration]
+# Set ACL on shared files/sockets
+- name: Set ACL
+  ansible.builtin.import_tasks: _set_acl.yml
+  tags: [_set_acl]
 
 # After new users are created we can delete default one without danger (i.e : delete the only user on the server)
-- import_tasks: _delete_user.yml
+- name: Delete unwanted users
+  ansible.builtin.import_tasks: _delete_user.yml
   tags: [_delete_user]

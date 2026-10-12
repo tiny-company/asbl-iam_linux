@@ -2,25 +2,29 @@
 # file : _set_acl.yml
 # description : set acl for specific shared files
 
-- name: get /boot/config filename
-  ansible.builtin.command: "ls /boot/config*"
-  register: boot_config_file
+- name: Find kernel boot config file
+  ansible.builtin.find:
+    paths: /boot
+    patterns: "config-*"
+  register: boot_config_files
 
-- name: check if acl are supported for ext4
-  ansible.builtin.lineinfile: 
-    dest: boot_config_file
+- name: Check if ACL is supported for ext4
+  ansible.builtin.lineinfile:
+    path: "{{ boot_config_files.files[0].path }}"
     line: "CONFIG_EXT4_FS_POSIX_ACL=y"
-  check_mode: yes
+  check_mode: true
   register: acl_ext4_support
+  when: boot_config_files.files | length > 0
 
-- name: check if acl are supported for reiserfs
-  ansible.builtin.lineinfile: 
-    dest: boot_config_file
+- name: Check if ACL is supported for reiserfs
+  ansible.builtin.lineinfile:
+    path: "{{ boot_config_files.files[0].path }}"
     line: "CONFIG_REISERFS_FS_POSIX_ACL=y"
-  check_mode: yes
+  check_mode: true
   register: acl_reiserfs_support
+  when: boot_config_files.files | length > 0
 
-- name: Set /var/log ACL
+- name: Set ACL entries
   ansible.posix.acl:
     path: "{{ item.path }}"
     entity: "{{ item.entity }}"
@@ -28,4 +32,7 @@
     permissions: "{{ item.permission }}"
     state: present
   with_items: "{{ acl_list }}"
-  when: acl_ext4_support and acl_reiserfs_support
+  when:
+    - boot_config_files.files | length > 0
+    - not acl_ext4_support.changed
+    - not acl_reiserfs_support.changed

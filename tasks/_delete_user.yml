@@ -6,6 +6,6 @@
   ansible.builtin.user:
     name: "{{ item }}"
     state: absent
-    remove: yes
+    remove: true
   with_items: "{{ users_to_del }}"
   when: users_to_del is iterable

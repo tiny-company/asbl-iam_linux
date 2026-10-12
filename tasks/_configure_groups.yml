@@ -11,5 +11,15 @@
   with_items: "{{ groups_to_add }}"
   when: groups_to_add is iterable
 
+- name: Grant passwordless sudo to groups flagged root_sudo
+  community.general.sudoers:
+    name: "{{ item.name }}-nopasswd"
+    group: "{{ item.name }}"
+    commands: ALL
+    nopassword: true
+    state: present
+  with_items: "{{ groups_to_add }}"
+  when: groups_to_add is iterable and item.root_sudo | default(false)
+
 - name: Reset ssh connection to allow user changes to affect 'current login user'
   ansible.builtin.meta: reset_connection

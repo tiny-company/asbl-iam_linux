@@ -7,20 +7,19 @@
 ## prerequisites
 ## set init to true for new host (when only root user exist) in order to connect using root user
 init_var: true
-# user to connect to host if init var (above) is set to false (default set to root_username)
+# user to connect to host if init var (above) is set to false (default: iam_linux_user)
 iam_linux_user: root
 
 ## ==================
 ## groups
-group_docker_name: docker
 groups_to_add:
-  - {name : "admin", root_sudo: true }
-  - {name : "dev", root_sudo: true }
-  - {name : "dqm", root_sudo: false }
-  - {name : "{{ group_docker_name }}", root_sudo: false }
+  - { name: "admin", root_sudo: true }
+  - { name: "docker", root_sudo: false }
 
 ## ==================
 ## root user vars
+# enable or disable root user configuration feature
+set_root_user_flag: false
 root_user:
   name: root
   groups: ["root"]
@@ -33,7 +32,7 @@ root_user:
 ## other user vars
 users_to_add:
   - name: "docker"
-    group: "{{ group_docker_name }}"
+    group: "docker"
     groups: []
     # shell: '/bin/bash'
     comment: 'docker user'
@@ -49,21 +48,9 @@ users_to_del: []
 ## ==================
 ## ACL
 
-acl_list:
-  - name: "log"
-    path: "/var/log/webdrone"
-    entity: "dqm"
-    etype: "group"
-    permission: "r"
-
-  - name: "docker_daemon"
-    path: "/var/run/docker.sock"
-    entity: "dev"
-    etype: "group"
-    permission: "rw"
-
-  - name: "docker_daemon"
-    path: "/var/run/docker.sock"
-    entity: "admin"
-    etype: "group"
-    permission: "rw"
+acl_list: []
+  # - name: "docker_daemon"
+  #   path: "/var/run/docker.sock"
+  #   entity: "admin"
+  #   etype: "group"
+  #   permission: "rw"
